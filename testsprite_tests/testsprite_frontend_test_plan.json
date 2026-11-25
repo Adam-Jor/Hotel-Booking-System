@@ -1,0 +1,1630 @@
+[
+  {
+    "id": "TC001",
+    "title": "Approve a payment proof and confirm the related booking",
+    "description": "An admin can review a payment proof and approve it so the payment and booking are updated.",
+    "category": "Admin Payment Verification",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email or username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /admin/payments"
+      },
+      {
+        "type": "action",
+        "description": "Open a pending payment proof"
+      },
+      {
+        "type": "action",
+        "description": "Approve the payment"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the payment status updates to approved"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the related booking status updates to confirmed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC002",
+    "title": "Redirect users by role after login",
+    "description": "A logged-in user is sent to the correct area based on their role after signing in.",
+    "category": "User Authentication",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email or username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user lands on the correct dashboard for their role"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC003",
+    "title": "Complete booking with bank transfer and pending payment",
+    "description": "A logged-in customer can finish checkout with bank transfer and see a pending booking reference afterward.",
+    "category": "Booking Checkout Wizard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the login credential field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /checkout"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the guest details fields with valid booking information"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the special requests field with a short request"
+      },
+      {
+        "type": "action",
+        "description": "Select bank transfer as the payment method"
+      },
+      {
+        "type": "action",
+        "description": "Upload valid payment proof"
+      },
+      {
+        "type": "action",
+        "description": "Confirm the booking"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a booking reference is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booking is shown with a pending payment status"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC004",
+    "title": "Search hotels from the home page",
+    "description": "A guest can search for hotels from the home page and see matching results.",
+    "category": "Public Hotel Browsing",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /"
+      },
+      {
+        "type": "action",
+        "description": "Fill in a location or hotel name field with a valid search term"
+      },
+      {
+        "type": "action",
+        "description": "Select valid travel dates"
+      },
+      {
+        "type": "action",
+        "description": "Select a valid guest count"
+      },
+      {
+        "type": "action",
+        "description": "Submit the hotel search"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify matching hotel results are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC005",
+    "title": "Complete booking with e-wallet payment and confirmed booking",
+    "description": "A logged-in customer can finish checkout with e-wallet payment and see the booking confirmed with invoice availability.",
+    "category": "Booking Checkout Wizard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the login credential field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /checkout"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the guest details fields with valid booking information"
+      },
+      {
+        "type": "action",
+        "description": "Select e-wallet as the payment method"
+      },
+      {
+        "type": "action",
+        "description": "Proceed with the payment confirmation"
+      },
+      {
+        "type": "action",
+        "description": "Confirm the booking"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a booking reference is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booking is shown as paid and invoice availability is visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC006",
+    "title": "Approve a pending booking",
+    "description": "An admin can open a pending booking and approve it so the booking status updates.",
+    "category": "Admin Booking Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email or username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /admin/bookings"
+      },
+      {
+        "type": "action",
+        "description": "Open a pending booking"
+      },
+      {
+        "type": "action",
+        "description": "Approve the booking"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booking status updates to approved"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booking remains accessible in the management view"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC007",
+    "title": "Review room availability and start checkout",
+    "description": "A guest or authenticated user can review room availability on a hotel detail page and begin booking a room type.",
+    "category": "Hotel Detail and Room Selection",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /hotels"
+      },
+      {
+        "type": "action",
+        "description": "Open a hotel from the results"
+      },
+      {
+        "type": "action",
+        "description": "Select valid travel dates on the hotel detail page"
+      },
+      {
+        "type": "action",
+        "description": "Choose an available room type"
+      },
+      {
+        "type": "action",
+        "description": "Continue to checkout"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the checkout flow begins with the selected room"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC008",
+    "title": "Search and filter hotels on the listing page",
+    "description": "A guest can search on the hotel listing page, apply filters, and see the results update accordingly.",
+    "category": "Public Hotel Browsing",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /hotels"
+      },
+      {
+        "type": "action",
+        "description": "Fill in a location or hotel name field with a valid search term"
+      },
+      {
+        "type": "action",
+        "description": "Select valid travel dates"
+      },
+      {
+        "type": "action",
+        "description": "Select a valid guest count"
+      },
+      {
+        "type": "action",
+        "description": "Submit the hotel search"
+      },
+      {
+        "type": "action",
+        "description": "Apply a price or rating filter"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify filtered hotel listings are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC009",
+    "title": "Reject a pending booking",
+    "description": "An admin can open a pending booking and reject it so the booking status updates.",
+    "category": "Admin Booking Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email or username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /admin/bookings"
+      },
+      {
+        "type": "action",
+        "description": "Open a pending booking"
+      },
+      {
+        "type": "action",
+        "description": "Reject the booking"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booking status updates to rejected"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booking remains accessible in the management view"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC010",
+    "title": "Open a hotel detail page from search results",
+    "description": "A guest can open a hotel from search results and view its details page.",
+    "category": "Public Hotel Browsing",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /hotels"
+      },
+      {
+        "type": "action",
+        "description": "Submit a hotel search with valid criteria"
+      },
+      {
+        "type": "action",
+        "description": "Open a hotel from the results"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the hotel detail page is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify hotel information and availability content are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC011",
+    "title": "Complete booking with cash payment",
+    "description": "A logged-in customer can complete checkout using cash and receive a final booking confirmation.",
+    "category": "Booking Checkout Wizard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the login credential field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /checkout"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the guest details fields with valid booking information"
+      },
+      {
+        "type": "action",
+        "description": "Select cash as the payment method"
+      },
+      {
+        "type": "action",
+        "description": "Confirm the cash payment option"
+      },
+      {
+        "type": "action",
+        "description": "Confirm the booking"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a booking reference is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the final booking confirmation is visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC012",
+    "title": "Update a booking status to checked in, completed, or cancelled",
+    "description": "An admin can change a booking to an operational status and see the updated status badge.",
+    "category": "Admin Booking Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email or username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /admin/bookings"
+      },
+      {
+        "type": "action",
+        "description": "Open a booking detail view"
+      },
+      {
+        "type": "action",
+        "description": "Change the booking status to checked in, completed, or cancelled"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booking status badge changes"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated booking status is visible in the management view"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC013",
+    "title": "Create a new hotel listing",
+    "description": "An admin can add a hotel and see it appear in the active hotel list.",
+    "category": "Admin Hotel Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the credential field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the admin hotels section"
+      },
+      {
+        "type": "action",
+        "description": "Open the add hotel flow"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the hotel name field with Meridian View Hotel"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the hotel slug field with meridian-view-hotel"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the hotel address field with 123 Sunrise Avenue"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the hotel description field with a short hotel description"
+      },
+      {
+        "type": "action",
+        "description": "Select a star rating"
+      },
+      {
+        "type": "action",
+        "description": "Save the hotel"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new hotel appears in the active hotel list"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC014",
+    "title": "Review room availability on a hotel detail page",
+    "description": "A guest can change dates on a hotel detail page and see room availability update.",
+    "category": "Public Hotel Browsing",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /hotels"
+      },
+      {
+        "type": "action",
+        "description": "Open a hotel from the results"
+      },
+      {
+        "type": "action",
+        "description": "Select valid travel dates on the hotel detail page"
+      },
+      {
+        "type": "action",
+        "description": "Review the available room types"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify available room types and nightly prices are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC015",
+    "title": "Create a room and assign it to a hotel room type",
+    "description": "An admin can add a room with a hotel, room type, number, and status and see it listed.",
+    "category": "Admin Room Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the credential field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the rooms section"
+      },
+      {
+        "type": "action",
+        "description": "Open the add room flow"
+      },
+      {
+        "type": "action",
+        "description": "Select a hotel"
+      },
+      {
+        "type": "action",
+        "description": "Select a room type"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the room number field with 1201"
+      },
+      {
+        "type": "action",
+        "description": "Select a room status"
+      },
+      {
+        "type": "action",
+        "description": "Save the room"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the new room appears in the room table"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC016",
+    "title": "Reject a payment proof with a reason",
+    "description": "An admin can reject a payment proof with a reason so the payment is marked as failed.",
+    "category": "Admin Payment Verification",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email or username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /admin/payments"
+      },
+      {
+        "type": "action",
+        "description": "Open a pending payment proof"
+      },
+      {
+        "type": "action",
+        "description": "Reject the payment"
+      },
+      {
+        "type": "action",
+        "description": "Enter a rejection reason"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the payment status updates to failed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the rejection reason is recorded in the payment view"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC017",
+    "title": "View booking history and details",
+    "description": "A logged-in customer can open booking history and inspect the status information for a booking.",
+    "category": "My Bookings",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the login credential field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /my-bookings"
+      },
+      {
+        "type": "action",
+        "description": "Open a booking detail view"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify booking history entries are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify booking status and payment status information is visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC018",
+    "title": "Register a new account",
+    "description": "A new user can submit the registration form and reach the expected post-registration state.",
+    "category": "User Authentication",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /register"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the name field with a valid name"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the username field with a unique username"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email field with a valid email address"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the phone field with a valid phone number"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with a valid password"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password confirmation field with the same password"
+      },
+      {
+        "type": "action",
+        "description": "Submit the registration form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user is redirected to the login page"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify registration success feedback is displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC019",
+    "title": "Update an existing hotel",
+    "description": "An admin can edit hotel details and see the updated record reflected in the hotel table.",
+    "category": "Admin Hotel Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the credential field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the admin hotels section"
+      },
+      {
+        "type": "action",
+        "description": "Open an existing hotel for editing"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the hotel name field with Meridian View Suites"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the hotel slug field with meridian-view-suites"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the hotel address field with 456 Sunset Boulevard"
+      },
+      {
+        "type": "action",
+        "description": "Update the hotel description field"
+      },
+      {
+        "type": "action",
+        "description": "Select a star rating"
+      },
+      {
+        "type": "action",
+        "description": "Save the changes"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated hotel record is shown in the active list"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC020",
+    "title": "Download invoice for a confirmed booking",
+    "description": "A logged-in customer can download an invoice from a confirmed booking in booking history.",
+    "category": "My Bookings",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the login credential field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /my-bookings"
+      },
+      {
+        "type": "action",
+        "description": "Open a confirmed booking detail view"
+      },
+      {
+        "type": "action",
+        "description": "Download the invoice for the booking"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the invoice download is available"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the confirmed booking remains visible after the action"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC021",
+    "title": "Review bookings with filters and open booking details",
+    "description": "An admin can filter bookings and open a booking detail view to review the booking information.",
+    "category": "Admin Booking Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email or username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /admin/bookings"
+      },
+      {
+        "type": "action",
+        "description": "Select a booking status filter"
+      },
+      {
+        "type": "action",
+        "description": "Select a date range filter"
+      },
+      {
+        "type": "action",
+        "description": "Select a hotel filter"
+      },
+      {
+        "type": "action",
+        "description": "Open a booking detail view"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a filtered booking list is displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify booking details are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC022",
+    "title": "Cancel a pending booking",
+    "description": "A logged-in customer can cancel a pending booking and see its status update accordingly.",
+    "category": "My Bookings",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the login credential field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /my-bookings"
+      },
+      {
+        "type": "action",
+        "description": "Open a pending booking detail view"
+      },
+      {
+        "type": "action",
+        "description": "Cancel the booking"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booking status updates to cancelled"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify cancellation feedback is visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC023",
+    "title": "Update a room assignment or status",
+    "description": "An admin can edit an existing room and see the updated assignment or status in the room table.",
+    "category": "Admin Room Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the credential field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the rooms section"
+      },
+      {
+        "type": "action",
+        "description": "Open an existing room for editing"
+      },
+      {
+        "type": "action",
+        "description": "Select a hotel"
+      },
+      {
+        "type": "action",
+        "description": "Select a room type"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the room number field with 1202"
+      },
+      {
+        "type": "action",
+        "description": "Select a room status"
+      },
+      {
+        "type": "action",
+        "description": "Save the changes"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated room record is shown in the room table"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC024",
+    "title": "Search and edit a user account",
+    "description": "An admin can find a user, update account details, and see the saved changes in the user list.",
+    "category": "Admin User Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email or username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /admin/users"
+      },
+      {
+        "type": "action",
+        "description": "Search for a user"
+      },
+      {
+        "type": "action",
+        "description": "Open the user edit flow"
+      },
+      {
+        "type": "action",
+        "description": "Update the user's profile details"
+      },
+      {
+        "type": "action",
+        "description": "Save the changes"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated user record is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user remains listed in the active user list"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC025",
+    "title": "Update a room type",
+    "description": "An admin can edit a room type and see the changes reflected in the room type list.",
+    "category": "Admin Room Type Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the credential field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the room types section"
+      },
+      {
+        "type": "action",
+        "description": "Open an existing room type for editing"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the room type name field with Executive Sea View"
+      },
+      {
+        "type": "action",
+        "description": "Update the room type description field"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the price field with a valid amount"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the capacity field with a valid guest capacity"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the total rooms field with a valid total"
+      },
+      {
+        "type": "action",
+        "description": "Save the changes"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the updated room type appears in the list"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC026",
+    "title": "Browse pending payments and open proof details",
+    "description": "An admin can review the pending payments list and open a proof detail view for inspection.",
+    "category": "Admin Payment Verification",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email or username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /admin/payments"
+      },
+      {
+        "type": "action",
+        "description": "Filter the payments to pending items"
+      },
+      {
+        "type": "action",
+        "description": "Open a payment proof view"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify pending payments are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify payment proof details are displayed"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC027",
+    "title": "View admin dashboard summary",
+    "description": "An admin can log in and review summary statistics on the admin dashboard.",
+    "category": "Admin Dashboard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the login credential field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /admin/dashboard"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify summary statistics are displayed"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify recent booking and revenue information is visible"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC028",
+    "title": "Remove a hotel from the active list",
+    "description": "An admin can delete a hotel and it no longer appears in the active hotel list.",
+    "category": "Admin Hotel Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the credential field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the admin hotels section"
+      },
+      {
+        "type": "action",
+        "description": "Open an existing hotel for removal"
+      },
+      {
+        "type": "action",
+        "description": "Remove the hotel"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the hotel no longer appears in the active hotel list"
+      }
+    ],
+    "priority": "High"
+  },
+  {
+    "id": "TC029",
+    "title": "Bulk update room status",
+    "description": "An admin can select multiple rooms and apply one status change to all of them.",
+    "category": "Admin Room Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the credential field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the rooms section"
+      },
+      {
+        "type": "action",
+        "description": "Select multiple rooms from the table"
+      },
+      {
+        "type": "action",
+        "description": "Apply a bulk status update"
+      },
+      {
+        "type": "action",
+        "description": "Select a new room status"
+      },
+      {
+        "type": "action",
+        "description": "Confirm the bulk update"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the selected rooms now share the updated status"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC030",
+    "title": "Remove a room type from the active list",
+    "description": "An admin can delete a room type and it no longer appears in the active room type list.",
+    "category": "Admin Room Type Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the credential field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Click the room types section"
+      },
+      {
+        "type": "action",
+        "description": "Open an existing room type for removal"
+      },
+      {
+        "type": "action",
+        "description": "Remove the room type"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the room type no longer appears in the active list"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC031",
+    "title": "Toggle a user between active and inactive",
+    "description": "An admin can change a user's active status and see the status badge update in the list.",
+    "category": "Admin User Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email or username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /admin/users"
+      },
+      {
+        "type": "action",
+        "description": "Open a user status action"
+      },
+      {
+        "type": "action",
+        "description": "Toggle the user active status"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user status badge changes"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user remains visible in the list"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC032",
+    "title": "Reject invalid login credentials",
+    "description": "A returning user sees an error when submitting invalid login credentials.",
+    "category": "User Authentication",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email or username field with fake credentials"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with an invalid password"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a login error message is displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC033",
+    "title": "Remove a user from the active list",
+    "description": "An admin can delete a user so the user moves out of the active list.",
+    "category": "Admin User Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email or username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /admin/users"
+      },
+      {
+        "type": "action",
+        "description": "Open a user action menu"
+      },
+      {
+        "type": "action",
+        "description": "Remove the user"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the user is no longer shown in the active list"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify an updated user list is displayed"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC034",
+    "title": "Show validation when booking details are invalid",
+    "description": "A logged-in customer sees validation feedback when the booking details contain an invalid guest count or travel date combination.",
+    "category": "Booking Checkout Wizard",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the login credential field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /checkout"
+      },
+      {
+        "type": "action",
+        "description": "Fill in an invalid guest count or travel date combination"
+      },
+      {
+        "type": "action",
+        "description": "Attempt to continue the booking flow"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify booking validation feedback is visible"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC035",
+    "title": "Resend a booking WhatsApp notification",
+    "description": "An admin can resend a booking notification and see the action complete in the booking view.",
+    "category": "Admin Booking Management",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the email or username field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /admin/bookings"
+      },
+      {
+        "type": "action",
+        "description": "Open a booking detail view"
+      },
+      {
+        "type": "action",
+        "description": "Resend the WhatsApp notification"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify a notification resend confirmation is visible"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booking detail view remains open"
+      }
+    ],
+    "priority": "Medium"
+  },
+  {
+    "id": "TC036",
+    "title": "Prevent cancellation of a non-pending booking",
+    "description": "A logged-in customer cannot cancel a booking that is no longer pending.",
+    "category": "My Bookings",
+    "steps": [
+      {
+        "type": "action",
+        "description": "Navigate to /login"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the login credential field with {{LOGIN_USER}}"
+      },
+      {
+        "type": "action",
+        "description": "Fill in the password field with {{LOGIN_PASSWORD}}"
+      },
+      {
+        "type": "action",
+        "description": "Submit the login form"
+      },
+      {
+        "type": "action",
+        "description": "Navigate to /my-bookings"
+      },
+      {
+        "type": "action",
+        "description": "Open a non-pending booking detail view"
+      },
+      {
+        "type": "action",
+        "description": "Attempt to cancel the booking"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify cancellation is not allowed for the booking"
+      },
+      {
+        "type": "assertion",
+        "description": "Verify the booking status remains unchanged"
+      }
+    ],
+    "priority": "Low"
+  }
+]

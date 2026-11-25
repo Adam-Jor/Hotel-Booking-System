@@ -18,3 +18,7 @@ yarn-error.log
 /.idea
 /.vscode
 PRD.md
+testsprite_tests/tmp/
+testsprite_tests/tmp/config.json
+/cookies.txt
+/cookies2.txt

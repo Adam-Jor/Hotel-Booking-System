@@ -16,88 +16,184 @@
 <body class="font-sans text-ink antialiased">
     @php($transparent = $transparent ?? false)
 
-    <div x-data="{ open: false, account: false }" class="{{ $transparent ? 'absolute inset-x-0 top-0 z-40' : 'relative z-40 bg-white' }}">
-        <header class="{{ $transparent ? 'text-white' : 'border-b border-line bg-white text-ink' }}">
-            <div class="mx-auto flex h-16 max-w-[1240px] items-center gap-6 px-4 sm:px-6">
-                <a href="{{ route('home') }}" wire:navigate class="flex items-center gap-1.5 text-xl font-extrabold tracking-tight">
-                    <span class="{{ $transparent ? 'text-white' : 'text-brand-600' }}">nusa</span><span class="{{ $transparent ? 'text-white' : 'text-ink' }}">stay</span>
-                    <svg class="h-5 w-5 text-accent" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.5 3.5 2.8 10.9c-.8.3-.8 1.5.1 1.7l6.4 1.8 1.8 6.4c.2.9 1.4.9 1.7.1L21.5 3.5Z"/></svg>
-                </a>
+    <header x-data="{ mobileMenu: false, accountMenu: false }"
+            :class="['relative z-40', $transparent ? 'absolute inset-x-0 top-0 text-white' : 'sticky top-0 border-b border-line bg-white/95 backdrop-blur-sm text-ink']">
+        <div class="mx-auto flex h-16 max-w-[1240px] items-center gap-4 px-4 sm:px-6">
+            <a href="{{ route('home') }}" wire:navigate class="flex items-center gap-1.5 text-xl font-extrabold tracking-tight flex-shrink-0">
+                <span :class="$transparent ? 'text-white' : 'text-brand-600'">nusa</span><span :class="$transparent ? 'text-white' : 'text-ink'">stay</span>
+                <svg class="h-5 w-5 text-accent" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.5 3.5 2.8 10.9c-.8.3-.8 1.5.1 1.7l6.4 1.8 1.8 6.4c.2.9 1.4.9 1.7.1L21.5 3.5Z"/></svg>
+            </a>
 
-                <div class="hidden items-center gap-1 text-sm font-semibold lg:flex">
-                    <a href="{{ route('hotels.index') }}" wire:navigate class="rounded-control px-3 py-2 transition-colors {{ request()->routeIs('hotels.*') ? ($transparent ? 'bg-white/15' : 'bg-brand-50 text-brand-700') : 'hover:bg-white/10' }}">Hotels</a>
-                    <a href="{{ route('hotels.index') }}" wire:navigate class="rounded-control px-3 py-2 transition-colors hover:bg-white/10">Deals</a>
-                    <a href="{{ route('hotels.index') }}" wire:navigate class="rounded-control px-3 py-2 transition-colors hover:bg-white/10">Destinations</a>
+            <nav class="hidden md:flex items-center gap-1 ml-4 flex-1 max-w-[500px]" aria-label="Main navigation">
+                <a href="{{ route('hotels.index') }}"
+                   wire:navigate
+                   class="rounded-control px-3 py-2 text-sm font-semibold transition-colors
+                          {{ request()->routeIs('hotels.*')
+                              ? ($transparent ? 'bg-white/15 text-white' : 'bg-brand-50 text-brand-700')
+                              : ($transparent ? 'hover:bg-white/10' : 'hover:bg-surface') }}">
+                    Hotels
+                </a>
+                @auth
+                    <a href="{{ route('my-bookings') }}"
+                       wire:navigate
+                       class="rounded-control px-3 py-2 text-sm font-semibold transition-colors
+                              {{ request()->routeIs('my-bookings')
+                                  ? ($transparent ? 'bg-white/15 text-white' : 'bg-brand-50 text-brand-700')
+                                  : ($transparent ? 'hover:bg-white/10' : 'hover:bg-surface') }}">
+                        My bookings
+                    </a>
+                @endauth
+            </nav>
+
+            <div class="flex items-center gap-2 ml-auto">
+                <div class="hidden md:flex items-center gap-2">
                     @auth
-                        <a href="{{ route('my-bookings') }}" wire:navigate class="rounded-control px-3 py-2 transition-colors hover:bg-white/10">My bookings</a>
+                        <div class="relative">
+                            <button @click="accountMenu = !accountMenu"
+                                    @keydown.escape="accountMenu = false"
+                                    class="flex items-center gap-2 rounded-full py-1 pl-1 pr-3 text-sm font-semibold transition-colors
+                                           {{ $transparent ? 'bg-white/10 hover:bg-white/20' : 'hover:bg-surface' }}"
+                                    aria-expanded="false"
+                                    aria-haspopup="true">
+                                <img src="{{ auth()->user()->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode(auth()->user()->name).'&background=0194F3&color=fff' }}"
+                                     alt=""
+                                     class="h-8 w-8 rounded-full object-cover">
+                                <span class="max-w-[110px] truncate">{{ auth()->user()->name }}</span>
+                                <span class="transition-transform duration-200" :class="{ 'rotate-180': accountMenu }">
+                                <x-icon name="chevron-down" class="h-4 w-4" />
+                            </span>
+                            </button>
+                            <div x-show="accountMenu"
+                                 x-cloak
+                                 @click.outside="accountMenu = false"
+                                 x-transition:enter="transition ease-out duration-100"
+                                 x-transition:enter-start="opacity-0 transform -translate-y-1"
+                                 x-transition:enter-end="opacity-100 transform translate-y-0"
+                                 x-transition:leave="transition ease-in duration-75"
+                                 x-transition:leave-start="opacity-100 transform translate-y-0"
+                                 x-transition:leave-end="opacity-0 transform -translate-y-1"
+                                 class="absolute right-0 top-full mt-1.5 w-56 overflow-hidden rounded-card border border-line bg-white py-1.5 shadow-float">
+                                @if (auth()->user()->isAdmin())
+                                    <a href="{{ route('admin.dashboard') }}"
+                                       wire:navigate
+                                       class="block px-4 py-2 text-sm font-medium text-ink hover:bg-surface">
+                                        Admin dashboard
+                                    </a>
+                                @endif
+                                <a href="{{ route('my-bookings') }}"
+                                   wire:navigate
+                                   class="block px-4 py-2 text-sm font-medium text-ink hover:bg-surface">
+                                    My bookings
+                                </a>
+                                <a href="{{ route('profile') }}"
+                                   wire:navigate
+                                   class="block px-4 py-2 text-sm font-medium text-ink hover:bg-surface">
+                                    Profile
+                                </a>
+                                <hr class="my-1.5 border-line">
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit"
+                                            class="block w-full px-4 py-2 text-left text-sm font-medium text-red-600 hover:bg-red-50">
+                                        Log out
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    @else
+                        <a href="{{ route('login') }}"
+                           wire:navigate
+                           class="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors
+                                  {{ $transparent ? 'bg-white text-brand-600 hover:bg-brand-50' : 'border border-brand-500 text-brand-600 hover:bg-brand-50' }}">
+                            Log in
+                        </a>
+                        <a href="{{ route('register') }}"
+                           wire:navigate
+                           class="rounded-full bg-brand-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-600">
+                            Register
+                        </a>
                     @endauth
                 </div>
 
-                <div class="ml-auto flex items-center gap-2">
-                    <div class="hidden items-center gap-2 sm:flex">
-                        @auth
-                            <div class="relative">
-                                <button @click="account = !account" class="flex items-center gap-2 rounded-full py-1 pl-1 pr-3 text-sm font-semibold transition-colors {{ $transparent ? 'bg-white/10 hover:bg-white/20' : 'hover:bg-surface' }}">
-                                    <img src="{{ auth()->user()->avatar_url }}" alt="" class="h-8 w-8 rounded-full object-cover">
-                                    <span class="max-w-[110px] truncate">{{ auth()->user()->name }}</span>
-                                    <x-icon name="chevron-down" class="h-4 w-4" />
-                                </button>
-                                <div x-show="account" x-cloak @click.outside="account = false" class="absolute right-0 top-12 w-52 overflow-hidden rounded-card border border-line bg-white py-1.5 text-ink shadow-float">
-                                    @if (auth()->user()->isAdmin())
-                                        <a href="{{ route('admin.dashboard') }}" class="block px-4 py-2 text-sm font-medium hover:bg-surface">Admin dashboard</a>
-                                    @endif
-                                    <a href="{{ route('my-bookings') }}" class="block px-4 py-2 text-sm font-medium hover:bg-surface">My bookings</a>
-                                    <a href="{{ route('profile') }}" class="block px-4 py-2 text-sm font-medium hover:bg-surface">Profile</a>
-                                    <form method="POST" action="{{ route('logout') }}">
-                                        @csrf
-                                        <button type="submit" class="block w-full px-4 py-2 text-left text-sm font-medium text-red-600 hover:bg-red-50">Log out</button>
-                                    </form>
-                                </div>
-                            </div>
-                        @else
-                            <a href="{{ route('login') }}" wire:navigate class="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors {{ $transparent ? 'bg-white text-brand-600 hover:bg-brand-50' : 'border border-brand-500 text-brand-600 hover:bg-brand-50' }}">
-                                Log in
-                            </a>
-                            <a href="{{ route('register') }}" wire:navigate class="rounded-full bg-brand-500 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-600">Register</a>
-                        @endauth
-                    </div>
-                    <button @click="open = !open" class="rounded-control p-2 lg:hidden" aria-label="Open menu">
-                        <x-icon name="menu" class="h-6 w-6" />
-                    </button>
-                </div>
+                <button @click="mobileMenu = !mobileMenu"
+                        @keydown.escape="mobileMenu = false"
+                        class="md:hidden rounded-control p-2 text-ink hover:bg-surface transition-colors"
+                        aria-label="Open menu"
+                        aria-expanded="false">
+                    <x-icon name="x" class="h-6 w-6" x-show="mobileMenu" />
+                    <x-icon name="menu" class="h-6 w-6" x-show="!mobileMenu" />
+                </button>
             </div>
+        </div>
 
-            <div class="hidden border-t lg:block {{ $transparent ? 'border-white/15' : 'border-line' }}">
-                <div class="mx-auto flex h-12 max-w-[1240px] items-center gap-6 px-6 text-sm font-semibold">
-                    <a href="{{ route('hotels.index') }}" wire:navigate class="border-b-2 border-accent pb-1">Hotels</a>
-                    <a href="{{ route('hotels.index') }}" wire:navigate class="opacity-80 transition-opacity hover:opacity-100">Villas</a>
-                    <a href="{{ route('hotels.index') }}" wire:navigate class="opacity-80 transition-opacity hover:opacity-100">Apartments</a>
-                    <a href="{{ route('hotels.index') }}" wire:navigate class="opacity-80 transition-opacity hover:opacity-100">Nearby stays</a>
-                    <span class="ml-auto inline-flex items-center gap-2 text-xs font-medium {{ $transparent ? 'text-white/80' : 'text-muted' }}">
-                        <x-icon name="shield" class="h-4 w-4" /> Secure booking
-                    </span>
-                </div>
-            </div>
-        </header>
-
-        <div x-show="open" x-cloak class="border-b border-line bg-white px-4 py-3 text-ink lg:hidden">
-            <nav class="flex flex-col gap-1 text-sm font-semibold">
-                <a href="{{ route('hotels.index') }}" class="rounded-control px-3 py-2 hover:bg-surface">Hotels</a>
+        <div x-show="mobileMenu"
+             x-cloak
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 transform -translate-y-4"
+             x-transition:enter-end="opacity-100 transform translate-y-0"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100 transform translate-y-0"
+             x-transition:leave-end="opacity-0 transform -translate-y-4"
+             class="md:hidden border-t border-line bg-white"
+             role="dialog"
+             aria-modal="true"
+             aria-label="Mobile menu">
+            <nav class="px-4 py-4 space-y-2">
+                <a href="{{ route('hotels.index') }}"
+                   wire:navigate
+                   @click="mobileMenu = false"
+                   class="block rounded-control px-3 py-2 text-base font-semibold text-ink hover:bg-surface">
+                    Hotels
+                </a>
                 @auth
-                    <a href="{{ route('my-bookings') }}" class="rounded-control px-3 py-2 hover:bg-surface">My bookings</a>
-                    <a href="{{ route('profile') }}" class="rounded-control px-3 py-2 hover:bg-surface">Profile</a>
+                    <a href="{{ route('my-bookings') }}"
+                       wire:navigate
+                       @click="mobileMenu = false"
+                       class="block rounded-control px-3 py-2 text-base font-semibold text-ink hover:bg-surface">
+                        My bookings
+                    </a>
+                    <a href="{{ route('profile') }}"
+                       wire:navigate
+                       @click="mobileMenu = false"
+                       class="block rounded-control px-3 py-2 text-base font-semibold text-ink hover:bg-surface">
+                        Profile
+                    </a>
                     @if (auth()->user()->isAdmin())
-                        <a href="{{ route('admin.dashboard') }}" class="rounded-control px-3 py-2 hover:bg-surface">Admin dashboard</a>
+                        <a href="{{ route('admin.dashboard') }}"
+                           wire:navigate
+                           @click="mobileMenu = false"
+                           class="block rounded-control px-3 py-2 text-base font-semibold text-ink hover:bg-surface">
+                            Admin dashboard
+                        </a>
                     @endif
+                    <hr class="my-2 border-line">
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit"
+                                @click="mobileMenu = false"
+                                class="block w-full rounded-control px-3 py-2 text-base font-semibold text-red-600 hover:bg-red-50 text-left">
+                            Log out
+                        </button>
+                    </form>
                 @else
-                    <a href="{{ route('login') }}" class="rounded-control px-3 py-2 hover:bg-surface">Log in</a>
-                    <a href="{{ route('register') }}" class="rounded-control px-3 py-2 hover:bg-surface">Register</a>
+                    <a href="{{ route('login') }}"
+                       wire:navigate
+                       @click="mobileMenu = false"
+                       class="block rounded-control px-3 py-2 text-base font-semibold text-ink hover:bg-surface">
+                        Log in
+                    </a>
+                    <a href="{{ route('register') }}"
+                       wire:navigate
+                       @click="mobileMenu = false"
+                       class="block rounded-control px-3 py-2 text-base font-semibold text-brand-600 hover:bg-brand-50 text-left">
+                        Register
+                    </a>
                 @endauth
             </nav>
         </div>
-    </div>
+    </header>
 
-    <main>
+    <main class="min-h-[calc(100vh-4rem)]">
         @hasSection('content')
             @yield('content')
         @else
@@ -150,10 +246,24 @@
     </footer>
 
     @if (session('success'))
-        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)" x-cloak
+        <div x-data="{ show: true }"
+             x-show="show"
+             x-init="setTimeout(() => show = false, 4000)"
+             x-cloak
              class="fixed bottom-5 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-card bg-ink px-4 py-3 text-sm font-medium text-white shadow-float">
             <x-icon name="check" class="h-4 w-4 text-emerald-400" />
             {{ session('success') }}
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div x-data="{ show: true }"
+             x-show="show"
+             x-init="setTimeout(() => show = false, 6000)"
+             x-cloak
+             class="fixed bottom-5 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-card bg-red-600 px-4 py-3 text-sm font-medium text-white shadow-float">
+            <x-icon name="alert-circle" class="h-4 w-4" />
+            {{ session('error') }}
         </div>
     @endif
 </body>

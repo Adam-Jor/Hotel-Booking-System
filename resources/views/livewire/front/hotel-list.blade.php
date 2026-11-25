@@ -1,117 +1,69 @@
-<div>
+<div x-data="{ filtersOpen: false }" class="w-full">
+    {{-- Toolbar --}}
+    <div class="mb-4 flex items-center justify-between gap-2 rounded-card border border-line bg-white px-3 py-2.5 sm:px-4">
+        <div class="min-w-0">
+            <p class="truncate text-sm font-bold">
+                {{ $hotels->total() }} {{ $hotels->total() === 1 ? 'hotel' : 'hotels' }}
+            </p>
+            <p class="truncate text-xs text-muted">{{ \Illuminate\Support\Carbon::parse($check_in)->format('j M') }} – {{ \Illuminate\Support\Carbon::parse($check_out)->format('j M') }} · {{ $nights }} {{ $nights === 1 ? 'night' : 'nights' }} · {{ $guests }} {{ $guests === 1 ? 'guest' : 'guests' }}</p>
+        </div>
+
+        <div class="flex shrink-0 items-center gap-2">
+            <button type="button" @click="filtersOpen = true"
+                    class="inline-flex items-center gap-1.5 rounded-control border border-line bg-white px-3 py-2 text-sm font-semibold hover:border-brand-300 lg:hidden">
+                <x-icon name="sliders-horizontal" class="h-4 w-4" />
+                <span>Filter</span>
+            </button>
+
+            <div class="relative">
+                <select wire:model.live="sort"
+                        class="h-10 appearance-none rounded-control border border-line bg-white pl-3 pr-8 text-sm font-semibold text-ink focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-200">
+                    <option value="recommended">Recommended</option>
+                    <option value="price_asc">Price: low to high</option>
+                    <option value="price_desc">Price: high to low</option>
+                    <option value="rating">Guest rating</option>
+                </select>
+                <x-icon name="chevron-down" class="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted" />
+            </div>
+        </div>
+    </div>
+
     <div class="grid gap-6 lg:grid-cols-[260px_1fr]">
+        {{-- Desktop filters --}}
         <aside class="hidden lg:block">
-            <div class="sticky top-4 space-y-5 rounded-card border border-line bg-white p-4">
-                <div>
-                    <p class="label">Destination</p>
-                    <input wire:model.live.debounce.400ms="city" list="search-cities" type="text" placeholder="City or hotel name" class="field">
-                    <datalist id="search-cities">
-                        @foreach ($cities as $city)
-                            <option value="{{ $city }}"></option>
-                        @endforeach
-                    </datalist>
-                </div>
-
-                <div class="grid grid-cols-2 gap-2">
-                    <div>
-                        <p class="label">Check-in</p>
-                        <input wire:model.live="check_in" type="date" min="{{ now()->toDateString() }}" class="field px-2">
-                    </div>
-                    <div>
-                        <p class="label">Check-out</p>
-                        <input wire:model.live="check_out" type="date" min="{{ now()->addDay()->toDateString() }}" class="field px-2">
-                    </div>
-                </div>
-
-                <div>
-                    <p class="label">Guests</p>
-                    <select wire:model.live="guests" class="field">
-                        @for ($i = 1; $i <= 6; $i++)
-                            <option value="{{ $i }}">{{ $i }} {{ $i === 1 ? 'guest' : 'guests' }}</option>
-                        @endfor
-                    </select>
-                </div>
-
-                <div class="border-t border-line pt-4">
-                    <p class="label">Price per night</p>
-                    <div class="grid grid-cols-2 gap-2">
-                        <input wire:model.live.debounce.500ms="min_price" type="number" min="0" step="50000" placeholder="Min" class="field px-2">
-                        <input wire:model.live.debounce.500ms="max_price" type="number" min="0" step="50000" placeholder="Max" class="field px-2">
-                    </div>
-                </div>
-
-                <div class="border-t border-line pt-4">
-                    <p class="label">Star rating</p>
-                    <div class="flex flex-wrap gap-1.5">
-                        @foreach ([5, 4, 3] as $s)
-                            <button type="button" wire:click="$set('star', {{ $star === $s ? 'null' : $s }})"
-                                    class="rounded-control border px-2.5 py-1.5 text-xs font-semibold {{ $star === $s ? 'border-brand-500 bg-brand-50 text-brand-700' : 'border-line text-muted hover:border-brand-300' }}">
-                                {{ $s }}★
-                            </button>
-                        @endforeach
-                    </div>
-                </div>
-
-                <div class="border-t border-line pt-4">
-                    <p class="label">Facilities</p>
-                    <div class="space-y-1.5">
-                        @foreach ($facilities as $item)
-                            <label class="flex cursor-pointer items-center gap-2 text-sm">
-                                <input type="radio" name="facility" wire:model.live="facility" value="{{ $item->id }}"
-                                       class="border-line text-brand-500 focus:ring-brand-500">
-                                <span class="text-muted">{{ $item->name }}</span>
-                            </label>
-                        @endforeach
-                    </div>
-                </div>
-
-                <button type="button" wire:click="clearFilters" class="w-full rounded-control border border-line py-2 text-sm font-semibold text-muted hover:bg-surface">
-                    Reset filters
-                </button>
+            <div class="sticky top-20 space-y-5 rounded-card border border-line bg-white p-4">
+                @include('livewire.front.partials.filters', ['uid' => 'desktop'])
             </div>
         </aside>
 
-        <div class="min-w-0">
-            <div class="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-card border border-line bg-white px-4 py-3">
-                <div class="min-w-0">
-                    <p class="truncate text-sm font-semibold">
-                        {{ $hotels->total() }} {{ $hotels->total() === 1 ? 'hotel' : 'hotels' }} available
-                    </p>
-                    <p class="text-xs text-muted">{{ \Illuminate\Support\Carbon::parse($check_in)->format('j M Y') }} → {{ \Illuminate\Support\Carbon::parse($check_out)->format('j M Y') }} · {{ $nights }} {{ $nights === 1 ? 'night' : 'nights' }} · {{ $guests }} {{ $guests === 1 ? 'guest' : 'guests' }}</p>
-                </div>
-                <div class="flex items-center gap-2">
-                    <button type="button" @click="$dispatch('toggle-filters')" class="btn-ghost border border-line lg:hidden" onclick="document.getElementById('mobile-filters').classList.toggle('hidden')">
-                        Filters
+        {{-- Mobile filter drawer --}}
+        <div x-show="filtersOpen" x-cloak class="fixed inset-0 z-50 lg:hidden" role="dialog" aria-modal="true" aria-label="Filters">
+            <div @click="filtersOpen = false" class="absolute inset-0 bg-black/50"></div>
+            <div x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="translate-y-full"
+                 x-transition:enter-end="translate-y-0"
+                 x-transition:leave="transition ease-in duration-150"
+                 x-transition:leave-start="translate-y-0"
+                 x-transition:leave-end="translate-y-full"
+                 class="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-2xl bg-white">
+                <div class="sticky top-0 z-10 flex items-center justify-between border-b border-line bg-white px-4 py-3">
+                    <h3 class="text-base font-bold">Filters</h3>
+                    <button type="button" @click="filtersOpen = false" class="rounded p-1.5 hover:bg-surface" aria-label="Close filters">
+                        <x-icon name="x" class="h-5 w-5" />
                     </button>
-                    <select wire:model.live="sort" class="field w-auto py-2 text-sm">
-                        <option value="recommended">Recommended</option>
-                        <option value="price_asc">Price: low to high</option>
-                        <option value="price_desc">Price: high to low</option>
-                        <option value="rating">Guest rating</option>
-                    </select>
+                </div>
+                <div class="space-y-5 p-4">
+                    @include('livewire.front.partials.filters', ['uid' => 'mobile'])
+                </div>
+                <div class="sticky bottom-0 flex gap-2 border-t border-line bg-white p-4">
+                    <button type="button" wire:click="clearFilters" @click="filtersOpen = false" class="btn-secondary flex-1">Reset</button>
+                    <button type="button" @click="filtersOpen = false" class="btn-primary flex-1">Show {{ $hotels->total() }}</button>
                 </div>
             </div>
+        </div>
 
-            <div id="mobile-filters" class="mb-4 hidden rounded-card border border-line bg-white p-4 lg:hidden">
-                <div class="grid gap-3 sm:grid-cols-2">
-                    <div>
-                        <p class="label">Destination</p>
-                        <input wire:model.live.debounce.400ms="city" type="text" placeholder="City or hotel name" class="field">
-                    </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <p class="label">Check-in</p>
-                            <input wire:model.live="check_in" type="date" class="field px-2">
-                        </div>
-                        <div>
-                            <p class="label">Check-out</p>
-                            <input wire:model.live="check_out" type="date" class="field px-2">
-                        </div>
-                    </div>
-                </div>
-                <button type="button" wire:click="clearFilters" class="mt-3 text-xs font-semibold text-brand-600">Reset filters</button>
-            </div>
-
+        {{-- Results --}}
+        <div class="min-w-0">
             @if ($hotels->isEmpty())
                 <div class="rounded-card border border-line bg-white p-10 text-center">
                     <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-surface text-muted"><x-icon name="search" class="h-5 w-5" /></div>
@@ -125,10 +77,7 @@
                         <x-front.hotel-card :hotel="$hotel" :check-in="$check_in" :check-out="$check_out" />
                     @endforeach
                 </div>
-
-                <div class="mt-6">
-                    {{ $hotels->links() }}
-                </div>
+                <div class="mt-6">{{ $hotels->links() }}</div>
             @endif
         </div>
     </div>

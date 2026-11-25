@@ -20,12 +20,6 @@
             </div>
 
             <div class="mx-auto mt-8 max-w-4xl">
-                <div class="mb-3 flex flex-wrap items-center gap-2 text-xs font-semibold text-white/90">
-                    <span class="rounded-full bg-white px-3 py-1.5 text-brand-700">All</span>
-                    <span class="rounded-full border border-white/25 bg-white/10 px-3 py-1.5">Hotels</span>
-                    <span class="rounded-full border border-white/25 bg-white/10 px-3 py-1.5">Villas</span>
-                    <span class="rounded-full border border-white/25 bg-white/10 px-3 py-1.5">Apartments</span>
-                </div>
                 <livewire:front.search-form />
             </div>
 
