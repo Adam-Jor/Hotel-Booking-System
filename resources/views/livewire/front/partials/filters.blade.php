@@ -9,12 +9,7 @@
 
 <div>
     <label class="label">Destination</label>
-    <input wire:model.live.debounce.400ms="city" list="search-cities-{{ $uid ?? 'd' }}" type="text" placeholder="City or hotel name" class="field" autocomplete="off">
-    <datalist id="search-cities-{{ $uid ?? 'd' }}">
-        @foreach ($cities as $city)
-            <option value="{{ $city }}"></option>
-        @endforeach
-    </datalist>
+    <x-city-autocomplete wire-model="city" :cities="$cities" live debounce="400" placeholder="City or hotel name" />
 </div>
 
 <div class="grid grid-cols-2 gap-2">

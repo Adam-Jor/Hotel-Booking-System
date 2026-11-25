@@ -2,22 +2,7 @@
     <form wire:submit="search" class="rounded-card bg-white p-3 shadow-float sm:p-4 space-y-3 sm:space-y-0 sm:grid sm:grid-cols-[1fr_1fr_1fr_1fr_auto] sm:items-end sm:gap-3">
         <div class="min-w-0">
             <label class="label">City, hotel, or destination</label>
-            <div class="relative">
-                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                    <x-icon name="map-pin" class="h-5 w-5 text-brand-500" />
-                </div>
-                <input wire:model.debounce.400ms="city"
-                       list="city-options"
-                       type="text"
-                       placeholder="Bali, Jakarta, Yogyakarta…"
-                       class="field pl-10 pr-3 py-2.5"
-                       autocomplete="off">
-                <datalist id="city-options">
-                    @foreach ($cities as $city)
-                        <option value="{{ $city }}"></option>
-                    @endforeach
-                </datalist>
-            </div>
+            <x-city-autocomplete wire-model="city" :cities="$cities" debounce="400" placeholder="Bali, Jakarta, Yogyakarta…" />
         </div>
 
         <div class="min-w-0">
