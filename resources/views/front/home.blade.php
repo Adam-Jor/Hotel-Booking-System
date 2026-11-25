@@ -1,25 +1,23 @@
 @extends('layouts.front')
 
-@php($transparent = true)
-
 @section('title', 'NusaStay — Hotels across Indonesia')
 
 @section('content')
-    <section class="relative overflow-hidden bg-brand-900">
+    <section class="relative bg-brand-900">
         <img src="https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=2000&q=75"
              alt="Coastal resort in Indonesia" class="absolute inset-0 h-full w-full object-cover" width="2000" height="1100">
         <div class="absolute inset-0 bg-gradient-to-b from-ink/70 via-ink/35 to-ink/60"></div>
 
-        <div class="relative mx-auto max-w-[1240px] px-4 pb-14 pt-32 sm:px-6 sm:pb-16 lg:pt-36">
+        <div class="relative z-10 mx-auto max-w-[1240px] px-4 pb-14 pt-10 sm:px-6 sm:pb-16 sm:pt-12 lg:pt-16">
             <div class="mx-auto max-w-3xl text-center text-white">
-                <p class="text-xs font-semibold uppercase tracking-wide text-white/75">Hotels · Villas · City stays</p>
+                <p class="text-xs font-semibold uppercase tracking-wide text-white/75">Hotels · City stays</p>
                 <h1 class="mt-3 text-3xl font-extrabold leading-tight sm:text-4xl lg:text-[42px]">Find a room worth waking up in</h1>
                 <p class="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-white/80 sm:text-base">
                     Compare hotels across Indonesia with real availability and clear nightly prices. Book in a few steps.
                 </p>
             </div>
 
-            <div class="mx-auto mt-8 max-w-4xl">
+            <div class="relative z-20 mx-auto mt-8 max-w-4xl">
                 <livewire:front.search-form />
             </div>
 

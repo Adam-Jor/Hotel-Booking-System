@@ -14,13 +14,11 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="font-sans text-ink antialiased">
-    @php($transparent = $transparent ?? false)
-
     <header x-data="{ mobileMenu: false, accountMenu: false }"
-            class="z-40 {{ $transparent ? 'absolute inset-x-0 top-0 text-white' : 'sticky top-0 border-b border-line bg-white/95 backdrop-blur-sm text-ink' }}">
+            class="relative z-40 sticky top-0 border-b border-line bg-white/95 text-ink backdrop-blur-sm">
         <div class="mx-auto flex h-16 max-w-[1240px] items-center gap-4 px-4 sm:px-6">
             <a href="{{ route('home') }}" wire:navigate class="flex items-center gap-1.5 text-xl font-extrabold tracking-tight flex-shrink-0">
-                <span class="{{ $transparent ? 'text-white' : 'text-brand-600' }}">nusa</span><span class="{{ $transparent ? 'text-white' : 'text-ink' }}">stay</span>
+                <span class="text-brand-600">nusa</span><span class="text-ink">stay</span>
                 <svg class="h-5 w-5 text-accent" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.5 3.5 2.8 10.9c-.8.3-.8 1.5.1 1.7l6.4 1.8 1.8 6.4c.2.9 1.4.9 1.7.1L21.5 3.5Z"/></svg>
             </a>
 
@@ -29,8 +27,8 @@
                    wire:navigate
                    class="rounded-control px-3 py-2 text-sm font-semibold transition-colors
                           {{ request()->routeIs('hotels.*')
-                              ? ($transparent ? 'bg-white/15 text-white' : 'bg-brand-50 text-brand-700')
-                              : ($transparent ? 'hover:bg-white/10' : 'hover:bg-surface') }}">
+                              ? 'bg-brand-50 text-brand-700'
+                              : 'hover:bg-surface' }}">
                     Hotels
                 </a>
                 @auth
@@ -38,8 +36,8 @@
                        wire:navigate
                        class="rounded-control px-3 py-2 text-sm font-semibold transition-colors
                               {{ request()->routeIs('my-bookings')
-                                  ? ($transparent ? 'bg-white/15 text-white' : 'bg-brand-50 text-brand-700')
-                                  : ($transparent ? 'hover:bg-white/10' : 'hover:bg-surface') }}">
+                                  ? 'bg-brand-50 text-brand-700'
+                                  : 'hover:bg-surface' }}">
                         My bookings
                     </a>
                 @endauth
@@ -51,8 +49,7 @@
                         <div class="relative">
                             <button @click="accountMenu = !accountMenu"
                                     @keydown.escape="accountMenu = false"
-                                    class="flex items-center gap-2 rounded-full py-1 pl-1 pr-3 text-sm font-semibold transition-colors
-                                           {{ $transparent ? 'bg-white/10 hover:bg-white/20' : 'hover:bg-surface' }}"
+                                    class="flex items-center gap-2 rounded-full py-1 pl-1 pr-3 text-sm font-semibold transition-colors hover:bg-surface"
                                     aria-expanded="false"
                                     aria-haspopup="true">
                                 <img src="{{ auth()->user()->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode(auth()->user()->name).'&background=0194F3&color=fff' }}"
@@ -103,8 +100,7 @@
                     @else
                         <a href="{{ route('login') }}"
                            wire:navigate
-                           class="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-colors
-                                  {{ $transparent ? 'bg-white text-brand-600 hover:bg-brand-50' : 'border border-brand-500 text-brand-600 hover:bg-brand-50' }}">
+                           class="inline-flex items-center gap-2 rounded-full border border-brand-500 px-4 py-2 text-sm font-semibold text-brand-600 transition-colors hover:bg-brand-50">
                             Log in
                         </a>
                         <a href="{{ route('register') }}"
@@ -128,13 +124,14 @@
 
         <div x-show="mobileMenu"
              x-cloak
+             @click.outside="mobileMenu = false"
              x-transition:enter="transition ease-out duration-200"
              x-transition:enter-start="opacity-0 transform -translate-y-4"
              x-transition:enter-end="opacity-100 transform translate-y-0"
              x-transition:leave="transition ease-in duration-150"
              x-transition:leave-start="opacity-100 transform translate-y-0"
              x-transition:leave-end="opacity-0 transform -translate-y-4"
-             class="md:hidden border-t border-line bg-white"
+             class="md:hidden absolute inset-x-0 top-full z-40 max-h-[calc(100vh-4rem)] overflow-y-auto border-b border-line bg-white shadow-float"
              role="dialog"
              aria-modal="true"
              aria-label="Mobile menu">
