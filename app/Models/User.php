@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -11,37 +10,45 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+    protected $table = 'tbl_users';
+
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'name', 'username', 'email', 'password', 'phone', 'img_url',
+        'role', 'status', 'last_login_time', 'archived',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    protected $hidden = ['password', 'remember_token'];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
             'email_verified_at' => 'datetime',
+            'last_login_time' => 'datetime',
             'password' => 'hashed',
+            'status' => 'integer',
+            'archived' => 'boolean',
         ];
+    }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class, 'id_user');
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'id_user');
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function getAvatarUrlAttribute(): string
+    {
+        return $this->img_url
+            ? asset($this->img_url)
+            : 'https://ui-avatars.com/api/?background=0194F3&color=fff&name='.urlencode($this->name);
     }
 }
