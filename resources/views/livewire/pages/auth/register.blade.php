@@ -3,7 +3,6 @@
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
@@ -11,78 +10,85 @@ use Livewire\Volt\Component;
 new #[Layout('layouts.guest')] class extends Component
 {
     public string $name = '';
+    public string $username = '';
     public string $email = '';
+    public string $phone = '';
     public string $password = '';
     public string $password_confirmation = '';
 
-    /**
-     * Handle an incoming registration request.
-     */
     public function register(): void
     {
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
+            'username' => ['required', 'string', 'min:3', 'max:30', 'regex:/^[a-zA-Z0-9._-]+$/', 'unique:'.User::class],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'phone' => ['required', 'string', 'max:20', 'regex:/^62[0-9]{8,13}$/'],
             'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+        ], [
+            'phone.regex' => 'Use WhatsApp format starting with 62, for example 6281234567890.',
         ]);
 
-        $validated['password'] = Hash::make($validated['password']);
+        $validated['role'] = 'customer';
+        $validated['status'] = 1;
 
         event(new Registered($user = User::create($validated)));
 
         Auth::login($user);
 
-        $this->redirect(route('dashboard', absolute: false), navigate: true);
+        $this->redirect(route('home', absolute: false), navigate: true);
     }
 }; ?>
 
 <div>
-    <form wire:submit="register">
-        <!-- Name -->
+    <h1 class="text-2xl font-bold tracking-tight">Create your account</h1>
+    <p class="mt-1.5 text-sm text-muted">Book hotels and keep every reservation in one place.</p>
+
+    <form wire:submit="register" class="mt-6 space-y-4">
         <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input wire:model="name" id="name" class="block mt-1 w-full" type="text" name="name" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+            <label for="name" class="label">Full name <span class="text-accent">*</span></label>
+            <input wire:model="name" id="name" type="text" required autofocus autocomplete="name" placeholder="Rina Wijaya" class="field">
+            <x-input-error :messages="$errors->get('name')" class="mt-1.5" />
         </div>
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input wire:model="email" id="email" class="block mt-1 w-full" type="email" name="email" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <div class="grid gap-4 sm:grid-cols-2">
+            <div>
+                <label for="username" class="label">Username <span class="text-accent">*</span></label>
+                <input wire:model="username" id="username" type="text" required autocomplete="username" placeholder="rina" class="field">
+                <x-input-error :messages="$errors->get('username')" class="mt-1.5" />
+            </div>
+            <div>
+                <label for="phone" class="label">WhatsApp <span class="text-accent">*</span></label>
+                <input wire:model="phone" id="phone" type="text" required autocomplete="tel" placeholder="6281234567890" class="field">
+                <x-input-error :messages="$errors->get('phone')" class="mt-1.5" />
+            </div>
         </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input wire:model="password" id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        <div>
+            <label for="email" class="label">Email <span class="text-accent">*</span></label>
+            <input wire:model="email" id="email" type="email" required autocomplete="email" placeholder="you@example.com" class="field">
+            <x-input-error :messages="$errors->get('email')" class="mt-1.5" />
         </div>
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input wire:model="password_confirmation" id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+        <div class="grid gap-4 sm:grid-cols-2">
+            <div>
+                <label for="password" class="label">Password <span class="text-accent">*</span></label>
+                <input wire:model="password" id="password" type="password" required autocomplete="new-password" placeholder="Min. 8 characters" class="field">
+                <x-input-error :messages="$errors->get('password')" class="mt-1.5" />
+            </div>
+            <div>
+                <label for="password_confirmation" class="label">Confirm password <span class="text-accent">*</span></label>
+                <input wire:model="password_confirmation" id="password_confirmation" type="password" required autocomplete="new-password" placeholder="Repeat password" class="field">
+            </div>
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}" wire:navigate>
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
+        <button type="submit" class="btn-primary w-full" wire:loading.attr="disabled">
+            <span wire:loading.remove wire:target="register">Create account</span>
+            <span wire:loading wire:target="register">Creating account…</span>
+        </button>
     </form>
+
+    <p class="mt-6 text-center text-sm text-muted">
+        Already have an account?
+        <a href="{{ route('login') }}" wire:navigate class="font-semibold text-brand-600 hover:text-brand-700">Log in</a>
+    </p>
 </div>

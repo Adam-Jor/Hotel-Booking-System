@@ -46,6 +46,8 @@ class Room extends Model
 
     public function getImageAttribute(): string
     {
-        return $this->img_url ?: 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1200&q=70';
+        $img = $this->img_url ?: 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?auto=format&fit=crop&w=1200&q=70';
+
+        return str_starts_with($img, 'http') ? $img : asset($img);
     }
 }

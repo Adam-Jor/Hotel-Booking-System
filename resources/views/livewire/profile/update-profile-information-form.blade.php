@@ -9,7 +9,9 @@ use Livewire\Volt\Component;
 new class extends Component
 {
     public string $name = '';
+    public string $username = '';
     public string $email = '';
+    public string $phone = '';
 
     /**
      * Mount the component.
@@ -17,7 +19,9 @@ new class extends Component
     public function mount(): void
     {
         $this->name = Auth::user()->name;
+        $this->username = Auth::user()->username;
         $this->email = Auth::user()->email;
+        $this->phone = Auth::user()->phone ?? '';
     }
 
     /**
@@ -29,7 +33,11 @@ new class extends Component
 
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
+            'username' => ['required', 'string', 'min:3', 'max:30', 'regex:/^[a-zA-Z0-9._-]+$/', Rule::unique(User::class)->ignore($user->id)],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($user->id)],
+            'phone' => ['nullable', 'string', 'max:20', 'regex:/^62[0-9]{8,13}$/'],
+        ], [
+            'phone.regex' => 'Use WhatsApp format starting with 62, for example 6281234567890.',
         ]);
 
         $user->fill($validated);
@@ -73,17 +81,32 @@ new class extends Component
         </p>
     </header>
 
-    <form wire:submit="updateProfileInformation" class="mt-6 space-y-6">
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input wire:model="name" id="name" name="name" type="text" class="mt-1 block w-full" required autofocus autocomplete="name" />
-            <x-input-error class="mt-2" :messages="$errors->get('name')" />
+    <form wire:submit="updateProfileInformation" class="mt-5 space-y-4">
+        <div class="grid gap-4 sm:grid-cols-2">
+            <div>
+                <label class="label" for="name">Name</label>
+                <input wire:model="name" id="name" name="name" type="text" class="field" required autofocus autocomplete="name">
+                <x-input-error class="mt-1.5" :messages="$errors->get('name')" />
+            </div>
+            <div>
+                <label class="label" for="username">Username</label>
+                <input wire:model="username" id="username" name="username" type="text" class="field" required autocomplete="username">
+                <x-input-error class="mt-1.5" :messages="$errors->get('username')" />
+            </div>
         </div>
 
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input wire:model="email" id="email" name="email" type="email" class="mt-1 block w-full" required autocomplete="username" />
-            <x-input-error class="mt-2" :messages="$errors->get('email')" />
+        <div class="grid gap-4 sm:grid-cols-2">
+            <div>
+                <label class="label" for="email">Email</label>
+                <input wire:model="email" id="email" name="email" type="email" class="field" required autocomplete="email">
+                <x-input-error class="mt-1.5" :messages="$errors->get('email')" />
+            </div>
+            <div>
+                <label class="label" for="phone">WhatsApp</label>
+                <input wire:model="phone" id="phone" name="phone" type="text" class="field" placeholder="6281234567890" autocomplete="tel">
+                <x-input-error class="mt-1.5" :messages="$errors->get('phone')" />
+            </div>
+        </div>
 
             @if (auth()->user() instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! auth()->user()->hasVerifiedEmail())
                 <div>

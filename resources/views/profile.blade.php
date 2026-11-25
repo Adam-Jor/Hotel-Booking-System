@@ -1,29 +1,24 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Profile') }}
-        </h2>
-    </x-slot>
+@extends('layouts.front')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    <livewire:profile.update-profile-information-form />
-                </div>
-            </div>
+@section('title', 'Profile — NusaStay')
 
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    <livewire:profile.update-password-form />
-                </div>
-            </div>
-
-            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div class="max-w-xl">
-                    <livewire:profile.delete-user-form />
-                </div>
-            </div>
+@section('content')
+    <div class="border-b border-line bg-surface">
+        <div class="mx-auto max-w-[900px] px-4 py-5 sm:px-6">
+            <h1 class="text-xl font-bold sm:text-2xl">Profile</h1>
+            <p class="mt-1 text-sm text-muted">Update your details, password or close your account.</p>
         </div>
     </div>
-</x-app-layout>
+
+    <div class="mx-auto max-w-[900px] space-y-5 px-4 py-6 sm:px-6">
+        <div class="rounded-card border border-line bg-white p-5 sm:p-6">
+            <livewire:profile.update-profile-information-form />
+        </div>
+        <div class="rounded-card border border-line bg-white p-5 sm:p-6">
+            <livewire:profile.update-password-form />
+        </div>
+        <div class="rounded-card border border-line bg-white p-5 sm:p-6">
+            <livewire:profile.delete-user-form />
+        </div>
+    </div>
+@endsection
