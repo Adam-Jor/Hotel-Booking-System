@@ -50,35 +50,97 @@
     </div>
 
     <div class="mt-5 grid gap-5 xl:grid-cols-[1.5fr_1fr]">
-        <div class="rounded-card border border-line bg-white p-5">
+        <div class="rounded-card border border-line bg-white p-5" x-data="{ open: false, mode: @js($mode) }">
             <div class="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                    <h2 class="text-base font-bold">Revenue by month</h2>
-                    <p class="mt-0.5 text-xs text-muted">Verified payments, last {{ $months }} {{ $months === 1 ? 'month' : 'months' }}</p>
+                    <h2 class="text-base font-bold">Revenue {{ $mode === 'month' ? 'by day' : 'by month' }}</h2>
+                    <p class="mt-0.5 text-xs text-muted">{{ $periodLabel }}</p>
                 </div>
                 <div class="flex flex-wrap items-center gap-2">
-                    <form method="GET" class="flex items-center gap-2">
-                        <select name="months" onchange="this.form.submit()" aria-label="Month range"
-                                class="field h-9 w-32 py-1 text-xs">
-                            @foreach ([1 => '1 month', 3 => '3 months', 6 => '6 months', 9 => '9 months', 12 => '12 months'] as $value => $label)
-                                <option value="{{ $value }}" @selected($months === $value)>{{ $label }}</option>
-                            @endforeach
-                        </select>
-                        <select name="year" onchange="this.form.submit()" aria-label="Year"
-                                class="field h-9 w-24 py-1 text-xs">
-                            @foreach ($years as $option)
-                                <option value="{{ $option }}" @selected($year === $option)>{{ $option }}</option>
-                            @endforeach
-                        </select>
-                    </form>
-                    <span class="badge bg-brand-50 text-brand-700">Rp {{ number_format($revenueByMonth->sum('value'), 0, ',', '.') }}</span>
+                    <a href="{{ route('admin.revenue.export', ['mode' => $mode, 'months' => $months, 'month' => $month, 'year' => $year]) }}"
+                       class="inline-flex h-9 items-center gap-1.5 rounded-control border border-line px-3 text-xs font-semibold text-muted transition-colors hover:border-brand-300 hover:text-brand-700">
+                        <x-icon name="download" class="h-3.5 w-3.5" /> Export CSV
+                    </a>
+
+                    <div class="relative">
+                        <button type="button" @click="open = !open"
+                                class="inline-flex h-9 items-center gap-1.5 rounded-control border border-line px-3 text-xs font-semibold text-ink transition-colors hover:border-brand-300"
+                                :aria-expanded="open.toString()">
+                            <x-icon name="sliders-horizontal" class="h-3.5 w-3.5" /> Filter
+                        </button>
+
+                        <div x-show="open"
+                             x-cloak
+                             @click.outside="open = false"
+                             x-transition:enter="transition ease-out duration-100"
+                             x-transition:enter-start="opacity-0 -translate-y-1"
+                             x-transition:enter-end="opacity-100 translate-y-0"
+                             x-transition:leave="transition ease-in duration-75"
+                             x-transition:leave-start="opacity-100 translate-y-0"
+                             x-transition:leave-end="opacity-0 -translate-y-1"
+                             class="absolute right-0 z-40 mt-2 w-80 rounded-card border border-line bg-white p-4 shadow-float">
+                            <form method="GET" class="space-y-3">
+                                <input type="hidden" name="mode" :value="mode">
+
+                                <div class="grid grid-cols-2 gap-2">
+                                    <button type="button" @click="mode = 'range'"
+                                            :class="mode === 'range' ? 'border-brand-500 bg-brand-50 text-brand-700' : 'border-line text-muted hover:border-brand-300'"
+                                            class="rounded-control border px-3 py-2 text-xs font-semibold transition-colors">
+                                        Rentang bulan
+                                    </button>
+                                    <button type="button" @click="mode = 'month'"
+                                            :class="mode === 'month' ? 'border-brand-500 bg-brand-50 text-brand-700' : 'border-line text-muted hover:border-brand-300'"
+                                            class="rounded-control border px-3 py-2 text-xs font-semibold transition-colors">
+                                        Nama bulan
+                                    </button>
+                                </div>
+
+                                <div x-show="mode === 'range'" class="space-y-1.5">
+                                    <label for="filter-months" class="label">Rentang (mulai Januari)</label>
+                                    <select id="filter-months" name="months" class="field">
+                                        @foreach ([3 => '3 bulan (Jan – Mar)', 6 => '6 bulan (Jan – Jun)', 9 => '9 bulan (Jan – Sep)', 12 => '12 bulan (Jan – Dec)'] as $value => $label)
+                                            <option value="{{ $value }}" @selected($months === $value)>{{ $label }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div x-show="mode === 'month'" class="space-y-1.5">
+                                    <label for="filter-month" class="label">Bulan</label>
+                                    <select id="filter-month" name="month" class="field">
+                                        @foreach (range(1, 12) as $value)
+                                            <option value="{{ $value }}" @selected($month === $value)>
+                                                {{ \Illuminate\Support\Carbon::create($year, $value, 1)->format('F') }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="space-y-1.5">
+                                    <label for="filter-year" class="label">Tahun</label>
+                                    <select id="filter-year" name="year" class="field">
+                                        @foreach ($years as $option)
+                                            <option value="{{ $option }}" @selected($year === $option)>{{ $option }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div class="flex justify-end gap-2 border-t border-line pt-3">
+                                    <button type="button" @click="open = false" class="btn-ghost border border-line">Cancel</button>
+                                    <button type="submit" class="btn-primary">Apply Filter</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <span class="badge bg-brand-50 text-brand-700">Rp {{ number_format($revenue->sum('value'), 0, ',', '.') }}</span>
                 </div>
             </div>
             <div class="relative mt-6 h-64">
                 <canvas id="revenueChart"
-                        data-labels="{{ $revenueByMonth->pluck('label')->toJson() }}"
-                        data-values="{{ $revenueByMonth->pluck('value')->toJson() }}"
-                        aria-label="Revenue by month chart" role="img"></canvas>
+                        data-type="{{ $mode === 'month' ? 'line' : 'bar' }}"
+                        data-labels="{{ $revenue->pluck('label')->toJson() }}"
+                        data-values="{{ $revenue->pluck('value')->toJson() }}"
+                        aria-label="Revenue chart" role="img"></canvas>
             </div>
         </div>
 

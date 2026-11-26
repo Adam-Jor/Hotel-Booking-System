@@ -9,25 +9,41 @@ const initRevenueChart = () => {
 
     const labels = JSON.parse(canvas.dataset.labels || '[]');
     const values = JSON.parse(canvas.dataset.values || '[]');
+    const type = canvas.dataset.type === 'line' ? 'line' : 'bar';
+    const existing = window.Chart.getChart(canvas);
+    if (existing) {
+        existing.destroy();
+    }
     const idr = new Intl.NumberFormat('id-ID');
     const compact = (value) => value >= 1e9 ? (value / 1e9).toFixed(1) + ' M'
         : value >= 1e6 ? (value / 1e6).toFixed(1) + ' jt'
         : value >= 1e3 ? (value / 1e3).toFixed(0) + ' rb'
         : value;
 
+    const dataset = type === 'line'
+        ? {
+            label: 'Revenue',
+            data: values,
+            borderColor: '#0194F3',
+            backgroundColor: 'rgba(1, 148, 243, 0.12)',
+            borderWidth: 2,
+            fill: true,
+            tension: 0.35,
+            pointRadius: 2,
+            pointHoverRadius: 4,
+        }
+        : {
+            label: 'Revenue',
+            data: values,
+            backgroundColor: '#0194F3',
+            hoverBackgroundColor: '#0183d9',
+            borderRadius: 6,
+            maxBarThickness: 48,
+        };
+
     new Chart(canvas, {
-        type: 'bar',
-        data: {
-            labels,
-            datasets: [{
-                label: 'Revenue',
-                data: values,
-                backgroundColor: '#0194F3',
-                hoverBackgroundColor: '#0183d9',
-                borderRadius: 6,
-                maxBarThickness: 48,
-            }],
-        },
+        type,
+        data: { labels, datasets: [dataset] },
         options: {
             responsive: true,
             maintainAspectRatio: false,

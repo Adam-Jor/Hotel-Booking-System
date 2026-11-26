@@ -43,11 +43,47 @@ class DashboardController
             ->limit(5)
             ->get();
 
-        $months = (int) request('months', 6);
-        if (! in_array($months, [1, 3, 6, 9, 12], true)) {
-            $months = 6;
-        }
+        $statusCounts = Booking::where('archived', 0)
+            ->select('status', DB::raw('count(*) as total'))
+            ->groupBy('status')
+            ->pluck('total', 'status');
 
+        return view('admin.dashboard', [
+            ...$this->revenueData(),
+            'stats' => $stats,
+            'recent' => $recent,
+            'pendingPayments' => $pendingPayments,
+            'statusCounts' => $statusCounts,
+        ]);
+    }
+
+    public function exportRevenue()
+    {
+        $data = $this->revenueData();
+        $mode = $data['mode'];
+        $filename = $mode === 'month'
+            ? 'revenue-'.$data['year'].'-'.str_pad((string) $data['month'], 2, '0', STR_PAD_LEFT).'.csv'
+            : 'revenue-'.$data['year'].'-first-'.$data['months'].'-months.csv';
+
+        return response()->streamDownload(function () use ($data, $mode) {
+            $out = fopen('php://output', 'w');
+            fputcsv($out, [$mode === 'month' ? 'Day' : 'Month', 'Revenue (IDR)']);
+            foreach ($data['revenue'] as $row) {
+                fputcsv($out, [$row['label'], $row['value']]);
+            }
+            fputcsv($out, ['Total', $data['revenue']->sum('value')]);
+            fclose($out);
+        }, $filename, ['Content-Type' => 'text/csv']);
+    }
+
+    /**
+     * Revenue for the chart and CSV export, driven by the same filter.
+     *
+     * range: Jan..N months of the selected year (N = 3, 6, 9, 12)
+     * month: every day of the selected month of the selected year
+     */
+    private function revenueData(): array
+    {
         $currentYear = (int) now()->year;
 
         $range = Payment::where('status', 'paid')
@@ -64,28 +100,60 @@ class DashboardController
             $year = $currentYear;
         }
 
-        $end = $year === $currentYear
-            ? now()->startOfMonth()
-            : Carbon::create($year, 12, 1)->startOfMonth();
+        $mode = request('mode') === 'month' ? 'month' : 'range';
 
-        $revenueByMonth = collect(range($months - 1, 0))->map(function ($i) use ($end) {
-            $month = $end->copy()->subMonths($i);
-            $total = Payment::where('status', 'paid')
-                ->whereYear('payment_date', $month->year)
-                ->whereMonth('payment_date', $month->month)
-                ->sum('amount');
+        $months = (int) request('months', 6);
+        if (! in_array($months, [3, 6, 9, 12], true)) {
+            $months = 6;
+        }
 
-            return [
-                'label' => $month->format('M Y'),
-                'value' => (float) $total,
-            ];
-        });
+        $month = (int) request('month', now()->month);
+        if ($month < 1 || $month > 12) {
+            $month = (int) now()->month;
+        }
 
-        $statusCounts = Booking::where('archived', 0)
-            ->select('status', DB::raw('count(*) as total'))
-            ->groupBy('status')
-            ->pluck('total', 'status');
+        if ($mode === 'month') {
+            $start = Carbon::create($year, $month, 1)->startOfDay();
+            $end = $start->copy()->endOfMonth();
 
-        return view('admin.dashboard', compact('stats', 'recent', 'pendingPayments', 'revenueByMonth', 'months', 'year', 'years', 'statusCounts'));
+            $totals = Payment::where('status', 'paid')
+                ->whereBetween('payment_date', [$start, $end])
+                ->get(['payment_date', 'amount'])
+                ->groupBy(fn (Payment $payment) => (int) $payment->payment_date->format('j'))
+                ->map(fn ($rows) => (float) $rows->sum('amount'));
+
+            $revenue = collect(range(1, $start->daysInMonth))->map(fn ($day) => [
+                'label' => (string) $day,
+                'value' => $totals->get($day, 0.0),
+            ]);
+
+            $periodLabel = $start->format('F Y').' · daily revenue';
+        } else {
+            $start = Carbon::create($year, 1, 1)->startOfDay();
+            $end = $start->copy()->addMonths($months - 1)->endOfMonth();
+
+            $totals = Payment::where('status', 'paid')
+                ->whereBetween('payment_date', [$start, $end])
+                ->get(['payment_date', 'amount'])
+                ->groupBy(fn (Payment $payment) => (int) $payment->payment_date->format('n'))
+                ->map(fn ($rows) => (float) $rows->sum('amount'));
+
+            $revenue = collect(range(1, $months))->map(fn ($index) => [
+                'label' => Carbon::create($year, $index, 1)->format('M'),
+                'value' => $totals->get($index, 0.0),
+            ]);
+
+            $periodLabel = 'January – '.Carbon::create($year, $months, 1)->format('F Y');
+        }
+
+        return [
+            'mode' => $mode,
+            'months' => $months,
+            'month' => $month,
+            'year' => $year,
+            'years' => $years,
+            'revenue' => $revenue,
+            'periodLabel' => $periodLabel,
+        ];
     }
 }

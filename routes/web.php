@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
 
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/revenue/export', [DashboardController::class, 'exportRevenue'])->name('revenue.export');
 
     Route::get('/hotels', [HotelController::class, 'index'])->name('hotels.index');
     Route::get('/room-types', [RoomTypeController::class, 'index'])->name('room-types.index');
