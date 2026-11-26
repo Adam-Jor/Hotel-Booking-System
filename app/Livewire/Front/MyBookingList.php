@@ -39,9 +39,9 @@ class MyBookingList extends Component
 
         try {
             $bookings->cancel($booking, 'customer');
-            session()->flash('success', "Booking {$booking->booking_code} cancelled.");
+            $this->dispatch('toast', message: "Booking {$booking->booking_code} cancelled.");
         } catch (\RuntimeException $e) {
-            session()->flash('success', $e->getMessage());
+            $this->dispatch('toast', message: $e->getMessage());
         }
 
         $this->cancelId = null;
@@ -63,7 +63,7 @@ class MyBookingList extends Component
 
         try {
             $payments->attachProof($payment, $this->proof);
-            session()->flash('success', 'Proof uploaded. Waiting for verification.');
+            $this->dispatch('toast', message: 'Proof uploaded. Waiting for verification.');
             $this->proofId = null;
             $this->proof = null;
         } catch (\RuntimeException $e) {
@@ -78,9 +78,9 @@ class MyBookingList extends Component
 
         try {
             $payments->payWithEwallet($payment);
-            session()->flash('success', 'Payment received. Your invoice is ready.');
+            $this->dispatch('toast', message: 'Payment received. Your invoice is ready.');
         } catch (\RuntimeException $e) {
-            session()->flash('success', $e->getMessage());
+            $this->dispatch('toast', message: $e->getMessage());
         }
     }
 
@@ -114,7 +114,7 @@ class MyBookingList extends Component
             'comment' => $this->comment ?: null,
         ]);
 
-        session()->flash('success', 'Thanks for the review.');
+        $this->dispatch('toast', message: 'Thanks for the review.');
         $this->reviewId = null;
     }
 

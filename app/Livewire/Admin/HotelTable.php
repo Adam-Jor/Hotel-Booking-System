@@ -93,13 +93,13 @@ class HotelTable extends Component
 
         $this->showModal = false;
         $this->resetForm();
-        session()->flash('success', $message);
+        $this->dispatch('toast', message: $message);
     }
 
     public function delete(int $id): void
     {
         Hotel::where('id', $id)->update(['archived' => 1]);
-        session()->flash('success', 'Hotel archived.');
+        $this->dispatch('toast', message: 'Hotel archived.');
     }
 
     public function resetForm(): void

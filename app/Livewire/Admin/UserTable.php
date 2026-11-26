@@ -76,32 +76,32 @@ class UserTable extends Component
 
         $this->showModal = false;
         $this->resetForm();
-        session()->flash('success', $message);
+        $this->dispatch('toast', message: $message);
     }
 
     public function toggleStatus(int $id): void
     {
         if ($id === auth()->id()) {
-            session()->flash('success', 'You cannot deactivate your own account.');
+            $this->dispatch('toast', message: 'You cannot deactivate your own account.');
 
             return;
         }
 
         $user = User::findOrFail($id);
         $user->update(['status' => $user->status ? 0 : 1]);
-        session()->flash('success', "{$user->name} is now ".($user->status ? 'active' : 'inactive').'.');
+        $this->dispatch('toast', message: "{$user->name} is now ".($user->status ? 'active' : 'inactive').'.');
     }
 
     public function archive(int $id): void
     {
         if ($id === auth()->id()) {
-            session()->flash('success', 'You cannot archive your own account.');
+            $this->dispatch('toast', message: 'You cannot archive your own account.');
 
             return;
         }
 
         User::where('id', $id)->update(['archived' => 1, 'status' => 0]);
-        session()->flash('success', 'User archived.');
+        $this->dispatch('toast', message: 'User archived.');
     }
 
     public function resetForm(): void

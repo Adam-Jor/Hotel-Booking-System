@@ -34,7 +34,7 @@ class BookingTable extends Component
         }
 
         $payments->recordCash($booking, auth()->user());
-        session()->flash('success', "{$booking->booking_code} marked as paid (cash).");
+        $this->dispatch('toast', message: "{$booking->booking_code} marked as paid (cash).");
     }
 
     public function complete(int $id, BookingService $bookings): void
@@ -43,9 +43,9 @@ class BookingTable extends Component
 
         try {
             $bookings->transition($booking, 'completed');
-            session()->flash('success', "{$booking->booking_code} completed.");
+            $this->dispatch('toast', message: "{$booking->booking_code} completed.");
         } catch (\RuntimeException $e) {
-            session()->flash('success', $e->getMessage());
+            $this->dispatch('toast', message: $e->getMessage());
         }
     }
 
@@ -55,9 +55,9 @@ class BookingTable extends Component
 
         try {
             $bookings->cancel($booking, 'admin', 'admin');
-            session()->flash('success', "{$booking->booking_code} cancelled.");
+            $this->dispatch('toast', message: "{$booking->booking_code} cancelled.");
         } catch (\RuntimeException $e) {
-            session()->flash('success', $e->getMessage());
+            $this->dispatch('toast', message: $e->getMessage());
         }
     }
 
@@ -65,7 +65,10 @@ class BookingTable extends Component
     {
         $booking = Booking::findOrFail($id);
         SendWhatsappNotification::dispatch($booking->id, 'created');
-        session()->flash('success', "WhatsApp for {$booking->booking_code} queued.");
+
+        $this->dispatch('toast', message: config('booking.whatsapp_token')
+            ? "WhatsApp for {$booking->booking_code} queued."
+            : "WhatsApp for {$booking->booking_code} logged locally (FONNTE_TOKEN not set).");
     }
 
     public function render()

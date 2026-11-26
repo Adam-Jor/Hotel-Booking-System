@@ -59,13 +59,13 @@ class RoomTypeTable extends Component
 
         $this->showModal = false;
         $this->resetForm();
-        session()->flash('success', $message);
+        $this->dispatch('toast', message: $message);
     }
 
     public function delete(int $id): void
     {
         RoomType::where('id', $id)->update(['archived' => 1]);
-        session()->flash('success', 'Room type archived.');
+        $this->dispatch('toast', message: 'Room type archived.');
     }
 
     public function resetForm(): void

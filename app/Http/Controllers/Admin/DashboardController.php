@@ -43,26 +43,49 @@ class DashboardController
             ->limit(5)
             ->get();
 
-        $revenueByMonth = collect(range(5, 0))->map(function ($i) {
-            $month = Carbon::today()->subMonths($i);
+        $months = (int) request('months', 6);
+        if (! in_array($months, [1, 3, 6, 9, 12], true)) {
+            $months = 6;
+        }
+
+        $currentYear = (int) now()->year;
+
+        $range = Payment::where('status', 'paid')
+            ->whereNotNull('payment_date')
+            ->selectRaw('MIN(payment_date) as first_paid, MAX(payment_date) as last_paid')
+            ->first();
+
+        $firstYear = $range?->first_paid ? (int) Carbon::parse($range->first_paid)->year : $currentYear;
+        $lastYear = max($currentYear, $range?->last_paid ? (int) Carbon::parse($range->last_paid)->year : $currentYear);
+        $years = collect(range($lastYear, $firstYear));
+
+        $year = (int) request('year', $currentYear);
+        if (! $years->contains($year)) {
+            $year = $currentYear;
+        }
+
+        $end = $year === $currentYear
+            ? now()->startOfMonth()
+            : Carbon::create($year, 12, 1)->startOfMonth();
+
+        $revenueByMonth = collect(range($months - 1, 0))->map(function ($i) use ($end) {
+            $month = $end->copy()->subMonths($i);
             $total = Payment::where('status', 'paid')
                 ->whereYear('payment_date', $month->year)
                 ->whereMonth('payment_date', $month->month)
                 ->sum('amount');
 
             return [
-                'label' => $month->format('M'),
+                'label' => $month->format('M Y'),
                 'value' => (float) $total,
             ];
         });
-
-        $maxRevenue = max(1, $revenueByMonth->max('value'));
 
         $statusCounts = Booking::where('archived', 0)
             ->select('status', DB::raw('count(*) as total'))
             ->groupBy('status')
             ->pluck('total', 'status');
 
-        return view('admin.dashboard', compact('stats', 'recent', 'pendingPayments', 'revenueByMonth', 'maxRevenue', 'statusCounts'));
+        return view('admin.dashboard', compact('stats', 'recent', 'pendingPayments', 'revenueByMonth', 'months', 'year', 'years', 'statusCounts'));
     }
 }

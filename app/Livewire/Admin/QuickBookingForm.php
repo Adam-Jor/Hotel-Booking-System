@@ -65,7 +65,7 @@ class QuickBookingForm extends Component
         $this->check_out = Carbon::tomorrow()->toDateString();
 
         $this->dispatch('booking-created');
-        session()->flash('success', 'Draft booking created.');
+        $this->dispatch('toast', message: 'Draft booking created.');
     }
 
     public function render()

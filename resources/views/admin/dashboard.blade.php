@@ -51,22 +51,34 @@
 
     <div class="mt-5 grid gap-5 xl:grid-cols-[1.5fr_1fr]">
         <div class="rounded-card border border-line bg-white p-5">
-            <div class="flex items-start justify-between gap-3">
+            <div class="flex flex-wrap items-start justify-between gap-3">
                 <div>
                     <h2 class="text-base font-bold">Revenue by month</h2>
-                    <p class="mt-0.5 text-xs text-muted">Verified payments, last six months</p>
+                    <p class="mt-0.5 text-xs text-muted">Verified payments, last {{ $months }} {{ $months === 1 ? 'month' : 'months' }}</p>
                 </div>
-                <span class="badge bg-brand-50 text-brand-700">Rp {{ number_format($revenueByMonth->sum('value'), 0, ',', '.') }}</span>
+                <div class="flex flex-wrap items-center gap-2">
+                    <form method="GET" class="flex items-center gap-2">
+                        <select name="months" onchange="this.form.submit()" aria-label="Month range"
+                                class="field h-9 w-32 py-1 text-xs">
+                            @foreach ([1 => '1 month', 3 => '3 months', 6 => '6 months', 9 => '9 months', 12 => '12 months'] as $value => $label)
+                                <option value="{{ $value }}" @selected($months === $value)>{{ $label }}</option>
+                            @endforeach
+                        </select>
+                        <select name="year" onchange="this.form.submit()" aria-label="Year"
+                                class="field h-9 w-24 py-1 text-xs">
+                            @foreach ($years as $option)
+                                <option value="{{ $option }}" @selected($year === $option)>{{ $option }}</option>
+                            @endforeach
+                        </select>
+                    </form>
+                    <span class="badge bg-brand-50 text-brand-700">Rp {{ number_format($revenueByMonth->sum('value'), 0, ',', '.') }}</span>
+                </div>
             </div>
-            <div class="mt-6 flex h-44 items-end gap-3">
-                @foreach ($revenueByMonth as $month)
-                    <div class="flex flex-1 flex-col items-center gap-2">
-                        <div class="flex w-full flex-1 items-end">
-                            <div class="w-full rounded-t bg-brand-500/85" style="height: {{ max(4, round(($month['value'] / $maxRevenue) * 100)) }}%"></div>
-                        </div>
-                        <span class="text-xs font-medium text-muted">{{ $month['label'] }}</span>
-                    </div>
-                @endforeach
+            <div class="relative mt-6 h-64">
+                <canvas id="revenueChart"
+                        data-labels="{{ $revenueByMonth->pluck('label')->toJson() }}"
+                        data-values="{{ $revenueByMonth->pluck('value')->toJson() }}"
+                        aria-label="Revenue by month chart" role="img"></canvas>
             </div>
         </div>
 

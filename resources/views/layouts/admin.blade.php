@@ -116,12 +116,14 @@
         </div>
     </div>
 
-    @if (session('success'))
-        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)" x-cloak
-             class="fixed bottom-5 left-1/2 z-50 flex -translate-x-1/2 items-center gap-2 rounded-card bg-ink px-4 py-3 text-sm font-medium text-white shadow-float">
-            <x-icon name="check" class="h-4 w-4 text-emerald-400" />
-            {{ session('success') }}
-        </div>
-    @endif
+    <div x-data="{ message: @js(session('success')), show: @js((bool) session('success')), timer: null }"
+         x-init="if (show) timer = setTimeout(() => show = false, 4000)"
+         x-on:toast.window="message = $event.detail.message; show = true; clearTimeout(timer); timer = setTimeout(() => show = false, 4000)"
+         x-show="show"
+         x-cloak
+         class="fixed bottom-5 left-1/2 z-50 flex max-w-[90vw] -translate-x-1/2 items-center gap-2 rounded-card bg-ink px-4 py-3 text-sm font-medium text-white shadow-float">
+        <x-icon name="check" class="h-4 w-4 shrink-0 text-emerald-400" />
+        <span x-text="message"></span>
+    </div>
 </body>
 </html>

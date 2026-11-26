@@ -135,7 +135,7 @@ class CheckoutWizard extends Component
             $payments->attachProof($this->payment, $this->proof);
             $this->proof = null;
             $this->refreshBooking();
-            session()->flash('success', 'Payment proof uploaded. The hotel will verify it shortly.');
+            $this->dispatch('toast', message: 'Payment proof uploaded. The hotel will verify it shortly.');
         } catch (\RuntimeException $e) {
             $this->addError('proof', $e->getMessage());
         }

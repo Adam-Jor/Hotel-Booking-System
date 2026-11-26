@@ -26,7 +26,7 @@ class PaymentTable extends Component
         $payment = Payment::with('booking')->findOrFail($id);
         $payments->approve($payment, auth()->user());
 
-        session()->flash('success', "Payment {$payment->reference_code} approved.");
+        $this->dispatch('toast', message: "Payment {$payment->reference_code} approved.");
     }
 
     public function openReject(int $id): void
@@ -45,7 +45,7 @@ class PaymentTable extends Component
         $payment = Payment::with('booking')->findOrFail($this->rejectId);
         $payments->reject($payment, auth()->user(), $this->rejectReason);
 
-        session()->flash('success', "Payment {$payment->reference_code} rejected.");
+        $this->dispatch('toast', message: "Payment {$payment->reference_code} rejected.");
         $this->rejectId = null;
         $this->rejectReason = '';
     }
