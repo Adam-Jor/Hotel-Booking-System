@@ -75,7 +75,8 @@ class WhatsappService
             'cancelled' => "Halo {$booking->customer_name}, booking {$booking->booking_code} di {$hotel} telah dibatalkan. Kamar sudah dilepas.",
             'expired' => "Halo {$booking->customer_name}, booking {$booking->booking_code} di {$hotel} kedaluwarsa karena belum dibayar. Silakan buat booking baru.",
             'reminder' => "Halo {$booking->customer_name}, pengingat check-in besok di {$hotel} ({$type}). Kode booking: {$booking->booking_code}. Sampai jumpa.",
-            default => "Halo {$booking->customer_name}, booking {$booking->booking_code} di {$hotel} ({$type}) berhasil dibuat. Check-in: {$checkIn}. Total: {$total}. Status: Pending. Bayar sebelum ".optional($booking->expires_at)->format('j M Y H:i').' WIB.',
+            'checkin' => "Halo {$booking->customer_name}, selamat datang! Check-in booking {$booking->booking_code} di {$hotel} ({$type}) hari ini ({$checkIn}). Selamat menginap!",
+            default => "Halo {$booking->customer_name}, booking {$booking->booking_code} di {$hotel} ({$type}) berhasil dibuat. Check-in: {$checkIn}. Total: {$total}. Status: {$booking->status_label}. Bayar sebelum ".optional($booking->expires_at)->format('j M Y H:i').' WIB.',
         };
     }
 
