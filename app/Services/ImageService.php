@@ -5,6 +5,7 @@ namespace App\Services;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use Intervention\Image\Drivers\Gd\Driver as GdDriver;
 use Intervention\Image\ImageManager;
 
 class ImageService
@@ -17,11 +18,10 @@ class ImageService
         $name = now()->format('YmdHis').'-'.Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME));
         $filename = $name.'.webp';
 
-        ImageManager::gd()
-            ->read($file->getRealPath())
+        (new ImageManager(new GdDriver()))
+            ->decodePath($file->getRealPath())
             ->scaleDown(width: 1400)
-            ->toWebp(80)
-            ->save($directory.DIRECTORY_SEPARATOR.$filename);
+            ->save($directory.DIRECTORY_SEPARATOR.$filename, quality: 80);
 
         return "uploads/{$folder}/{$filename}";
     }
