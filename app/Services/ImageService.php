@@ -10,6 +10,11 @@ use Intervention\Image\ImageManager;
 
 class ImageService
 {
+    public function __construct(
+        private ProofUploadService $proofUpload
+    ) {
+    }
+
     public function store(UploadedFile $file, string $folder): string
     {
         $directory = public_path("uploads/{$folder}");
@@ -31,16 +36,6 @@ class ImageService
      */
     public function storeProof(UploadedFile $file, string $folder = 'payments'): string
     {
-        if ($file->getMimeType() === 'application/pdf') {
-            $directory = public_path("uploads/{$folder}");
-            File::ensureDirectoryExists($directory);
-
-            $filename = now()->format('YmdHis').'-'.Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)).'.pdf';
-            $file->move($directory, $filename);
-
-            return "uploads/{$folder}/{$filename}";
-        }
-
-        return $this->store($file, $folder);
+        return $this->proofUpload->store($file, $folder);
     }
 }

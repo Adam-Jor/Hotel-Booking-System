@@ -54,12 +54,12 @@
                             <td class="table-td whitespace-nowrap font-semibold">Rp {{ number_format((float) $payment->amount, 0, ',', '.') }}</td>
                             <td class="table-td">
                                 @if ($payment->proof_url)
-                                    <a href="{{ asset($payment->proof_url) }}" target="_blank" rel="noopener"
+                                    <a href="{{ asset('storage/'.$payment->proof_url) }}" target="_blank" rel="noopener"
                                        class="inline-flex items-center gap-2 text-xs font-semibold text-brand-600 hover:text-brand-700">
                                         @if (str_ends_with(strtolower($payment->proof_url), '.pdf'))
                                             <x-icon name="download" class="h-3.5 w-3.5" /> PDF
                                         @else
-                                            <img src="{{ asset($payment->proof_url) }}" alt="Transfer proof"
+                                            <img src="{{ asset('storage/'.$payment->proof_url) }}" alt="Transfer proof"
                                                  loading="lazy" class="h-10 w-10 rounded border border-line object-cover">
                                             <span>Open</span>
                                         @endif

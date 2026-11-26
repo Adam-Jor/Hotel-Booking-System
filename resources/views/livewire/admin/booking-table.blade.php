@@ -144,7 +144,7 @@
                                     </div>
                                     <div class="flex items-center gap-2">
                                         @if ($payment->proof_url)
-                                            <a href="{{ asset($payment->proof_url) }}" target="_blank" class="text-xs font-semibold text-brand-600">Proof</a>
+                                            <a href="{{ asset('storage/'.$payment->proof_url) }}" target="_blank" class="text-xs font-semibold text-brand-600">Proof</a>
                                         @endif
                                         <span class="badge {{ $badge($payment->status) }}">{{ ucfirst($payment->status) }}</span>
                                     </div>

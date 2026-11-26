@@ -46,9 +46,17 @@ new #[Layout('layouts.guest')] class extends Component
                     <a class="text-xs font-semibold text-brand-600 hover:text-brand-700" href="{{ route('password.request') }}" wire:navigate>Forgot password?</a>
                 @endif
             </div>
-            <input wire:model="form.password" id="password" type="password" name="password" required autocomplete="current-password"
-                   placeholder="Your password" class="field">
-            <x-input-error :messages="$errors->get('form.password')" class="mt-1.5" />
+            <div x-data="{ show: false }" class="relative">
+                <input wire:model="form.password" id="password" :type="show ? 'text' : 'password'" name="password" required autocomplete="current-password"
+                       placeholder="Your password" class="field pr-12">
+                <button type="button" @click="show = !show"
+                        class="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-ink"
+                        aria-label="Toggle password visibility">
+                    <x-icon name="eye" class="h-5 w-5" x-show="!show" />
+                    <x-icon name="eye-off" class="h-5 w-5" x-show="show" />
+                </button>
+                <x-input-error :messages="$errors->get('form.password')" class="mt-1.5" />
+            </div>
         </div>
 
         <label for="remember" class="flex items-center gap-2 text-sm text-muted">
@@ -67,7 +75,4 @@ new #[Layout('layouts.guest')] class extends Component
         <a href="{{ route('register') }}" wire:navigate class="font-semibold text-brand-600 hover:text-brand-700">Create an account</a>
     </p>
 
-    <div class="mt-6 rounded-card bg-surface p-3 text-xs text-muted">
-        Demo accounts — admin: <span class="font-semibold text-ink">admin@hotel.test</span> · customer: <span class="font-semibold text-ink">customer@hotel.test</span> · password: <span class="font-semibold text-ink">password</span>
-    </div>
 </div>

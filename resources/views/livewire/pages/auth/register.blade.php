@@ -72,12 +72,28 @@ new #[Layout('layouts.guest')] class extends Component
         <div class="grid gap-4 sm:grid-cols-2">
             <div>
                 <label for="password" class="label">Password <span class="text-accent">*</span></label>
-                <input wire:model="password" id="password" type="password" required autocomplete="new-password" placeholder="Min. 8 characters" class="field">
-                <x-input-error :messages="$errors->get('password')" class="mt-1.5" />
+                <div x-data="{ show: false }" class="relative">
+                    <input wire:model="password" id="password" :type="show ? 'text' : 'password'" required autocomplete="new-password" placeholder="Min. 8 characters" class="field pr-12">
+                    <button type="button" @click="show = !show"
+                            class="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-ink"
+                            aria-label="Toggle password visibility">
+                        <x-icon name="eye" class="h-5 w-5" x-show="!show" />
+                        <x-icon name="eye-off" class="h-5 w-5" x-show="show" />
+                    </button>
+                    <x-input-error :messages="$errors->get('password')" class="mt-1.5" />
+                </div>
             </div>
             <div>
                 <label for="password_confirmation" class="label">Confirm password <span class="text-accent">*</span></label>
-                <input wire:model="password_confirmation" id="password_confirmation" type="password" required autocomplete="new-password" placeholder="Repeat password" class="field">
+                <div x-data="{ show: false }" class="relative">
+                    <input wire:model="password_confirmation" id="password_confirmation" :type="show ? 'text' : 'password'" required autocomplete="new-password" placeholder="Repeat password" class="field pr-12">
+                    <button type="button" @click="show = !show"
+                            class="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-ink"
+                            aria-label="Toggle password visibility">
+                        <x-icon name="eye" class="h-5 w-5" x-show="!show" />
+                        <x-icon name="eye-off" class="h-5 w-5" x-show="show" />
+                    </button>
+                </div>
             </div>
         </div>
 
