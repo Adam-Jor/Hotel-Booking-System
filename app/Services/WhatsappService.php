@@ -13,7 +13,7 @@ class WhatsappService
     public function send(Booking $booking, string $event): void
     {
         $booking->loadMissing('user', 'room.hotel', 'room.roomType');
-        $phone = $booking->user?->phone;
+        $phone = $this->normalizePhone($booking->user?->phone);
 
         if (! $phone) {
             return;
@@ -44,13 +44,16 @@ class WhatsappService
                     'message' => $message,
                 ]);
 
+            $body = $response->json();
+            $fonnteStatus = data_get($body, 'status', $response->successful());
+
             $log->update([
-                'status' => $response->successful() ? 'sent' : 'failed',
+                'status' => $fonnteStatus ? 'sent' : 'failed',
                 'response' => Str::limit($response->body(), 900),
             ]);
 
-            if (! $response->successful()) {
-                throw new \RuntimeException('WhatsApp provider responded with '.$response->status());
+            if (! $fonnteStatus) {
+                throw new \RuntimeException('Fonnte rejected: '.($body['reason'] ?? $response->body()));
             }
         } catch (\Throwable $e) {
             $log->update(['status' => 'failed', 'response' => Str::limit($e->getMessage(), 900)]);
@@ -74,5 +77,17 @@ class WhatsappService
             'reminder' => "Halo {$booking->customer_name}, pengingat check-in besok di {$hotel} ({$type}). Kode booking: {$booking->booking_code}. Sampai jumpa.",
             default => "Halo {$booking->customer_name}, booking {$booking->booking_code} di {$hotel} ({$type}) berhasil dibuat. Check-in: {$checkIn}. Total: {$total}. Status: Pending. Bayar sebelum ".optional($booking->expires_at)->format('j M Y H:i').' WIB.',
         };
+    }
+
+    private function normalizePhone(?string $phone): ?string
+    {
+        if ($phone === null || $phone === '') return null;
+        $digits = preg_replace('/\D/', '', $phone);
+        if (str_starts_with($digits, '0')) $digits = '62'.substr($digits, 1);
+        if (str_starts_with($digits, '8')) $digits = '62'.$digits;
+        if (str_starts_with($digits, '62') && !str_starts_with($digits, '628')) {
+            $digits = '628'.substr($digits, 2);
+        }
+        return $digits;
     }
 }

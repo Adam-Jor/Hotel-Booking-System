@@ -51,4 +51,26 @@ class User extends Authenticatable
             ? asset($this->img_url)
             : 'https://ui-avatars.com/api/?background=0194F3&color=fff&name='.urlencode($this->name);
     }
+
+    public function setPhoneAttribute(?string $value): void
+    {
+        if ($value === null || $value === '') {
+            $this->attributes['phone'] = null;
+            return;
+        }
+        $digits = preg_replace('/\D/', '', $value);
+        // 08xxx -> 628xxx
+        if (str_starts_with($digits, '0')) {
+            $digits = '62'.substr($digits, 1);
+        }
+        // 8xxx -> 628xxx
+        if (str_starts_with($digits, '8')) {
+            $digits = '62'.$digits;
+        }
+        // 62xxxx but not 628 -> assume 628...
+        if (str_starts_with($digits, '62') && !str_starts_with($digits, '628')) {
+            $digits = '628'.substr($digits, 2);
+        }
+        $this->attributes['phone'] = $digits;
+    }
 }
